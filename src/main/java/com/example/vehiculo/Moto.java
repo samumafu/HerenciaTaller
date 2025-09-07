@@ -8,7 +8,7 @@ public class Moto extends Vehiculo {
 
     @Override
     public double costoBaseDia() {
-        return 25.0; // tarifa base para Moto
+        return 30.0;
     }
 
     @Override

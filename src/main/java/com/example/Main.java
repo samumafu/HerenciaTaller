@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.example.alquiler.Alquiler;
+import com.example.estrategia.PrecioEstandar;
+import com.example.estrategia.PrecioFinde;
+import com.example.estrategia.PrecioLargoPlazo;
+import com.example.vehiculo.*;
+
 public class Main {
 
     private static List<Vehiculo> flota = new ArrayList<>();
@@ -14,11 +20,11 @@ public class Main {
     }
 
     private static void cargarVehiculosEjemplo() {
-        flota.add(new Auto("AAA111", "Toyota", "Corolla", 12000.0));
-        flota.add(new Moto("BBB222", "Yamaha", "YZF", 5000.0));
-        flota.add(new Camioneta("CCC333", "Ford", "Ranger", 30000.0, 1000.0));
-        flota.add(new AutoElectrico("DDD444", "Nissan", "Leaf", 8000.0, 60));
-        flota.add(new CamionetaElectrica("EEE555", "Tesla", "CyberX", 2000.0, 1500.0, 40));
+        flota.add(new Auto("ABC123", "Toyota", "Corolla", 50000));
+        flota.add(new Moto("XYZ789", "Yamaha", "MT-07", 12000));
+        flota.add(new Camioneta("JKL456", "Ford", "Ranger", 30000, 1000));
+        flota.add(new AutoElectrico("ELEC01", "Tesla", "Model 3", 15000, 80));
+        flota.add(new CamionetaElectrica("ELEC02", "Rivian", "R1T", 8000, 1500, 60));
     }
 
     private static void menu() {
@@ -59,8 +65,8 @@ public class Main {
             Vehiculo v = flota.get(i);
             System.out.printf("[%d] %s\n", i, v.toString());
             System.out.print("     Interfaces: Rentable");
-            if (v instanceof Asegurable) System.out.print(", Asegurable");
-            if (v instanceof Electrico) System.out.print(", Electrico");
+            if (v instanceof com.example.interfaces.Asegurable) System.out.print(", Asegurable");
+            if (v instanceof com.example.interfaces.Electrico) System.out.print(", Electrico");
             System.out.print("\n");
             System.out.println("     Estrategia: " + ((v.getEstrategia() == null) ? "PrecioEstandar (por defecto)" : v.getEstrategia().getClass().getSimpleName()));
         }
@@ -81,7 +87,7 @@ public class Main {
                 case 3: v.setEstrategia(new PrecioLargoPlazo()); break;
                 default: System.out.println("Estrategia inválida."); return;
             }
-            System.out.println("Estrategia asignada a " + v.getPlaca());
+            System.out.println("Estrategia asignada a " + v.toString());
         } catch (Exception e) {
             System.out.println("Error al asignar estrategia: " + e.getMessage());
         }
@@ -108,11 +114,11 @@ public class Main {
             System.out.print("Índice vehículo: ");
             int idx = Integer.parseInt(sc.nextLine());
             Vehiculo v = flota.get(idx);
-            if (!(v instanceof Electrico)) {
+            if (!(v instanceof com.example.interfaces.Electrico)) {
                 System.out.println("El vehículo seleccionado no es eléctrico.");
                 return;
             }
-            Electrico e = (Electrico) v;
+            com.example.interfaces.Electrico e = (com.example.interfaces.Electrico) v;
             System.out.println("Nivel actual: " + e.nivelBateria() + "%");
             System.out.print("Minutos a recargar: ");
             int minutos = Integer.parseInt(sc.nextLine());
@@ -141,10 +147,10 @@ public class Main {
     private static void pruebasRapidas() {
         System.out.println("\n--- PRUEBAS RÁPIDAS ---");
 
-        // Polimorfismo: Rentable a distintos tipos
+        // Polimorfismo: Rentable a distintos tipos (mismos dias = 5)
         System.out.println("\nPolimorfismo (mismo dias=5) sobre diferentes vehículos:");
         for (Vehiculo v : flota) {
-            Rentable r = v; // referencia Rentable
+            com.example.interfaces.Rentable r = v; // referencia Rentable
             double total = r.calcularPrecioAlquiler(5);
             System.out.printf("%s -> total(5 días) = %.2f\n", v.getClass().getSimpleName(), total);
         }
@@ -173,11 +179,11 @@ public class Main {
         // Recarga en eléctricos respeta tope 100
         System.out.println("\nRecarga en eléctricos respeta tope 100:");
         Vehiculo electrico = null;
-        for (Vehiculo v : flota) if (v instanceof Electrico) { electrico = v; break; }
+        for (Vehiculo v : flota) if (v instanceof com.example.interfaces.Electrico) { electrico = v; break; }
         if (electrico != null) {
-            Electrico e = (Electrico) electrico;
+            com.example.interfaces.Electrico e = (com.example.interfaces.Electrico) electrico;
             System.out.println("Nivel actual: " + e.nivelBateria());
-            e.recargar(5000); // muchos minutos -> debería tope en 100
+            e.recargar(5000); // muchos minutos -> tope en 100
             System.out.println("Nivel tras recargar mucho: " + e.nivelBateria());
         } else {
             System.out.println("No hay eléctricos en la flota para probar.");

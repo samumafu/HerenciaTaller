@@ -1,33 +1,37 @@
 package com.example.vehiculo;
 
+import com.example.interfaces.Rentable;
+import com.example.interfaces.Asegurable;
+import com.example.estrategia.EstrategiaPrecio;
+import com.example.estrategia.PrecioEstandar;
+
 public abstract class Vehiculo implements Rentable {
     protected String placa;
     protected String marca;
     protected String modelo;
     protected double km;
-    protected EstrategiaPrecio estrategia; // puede ser null -> uso estándar por defecto
+    protected EstrategiaPrecio estrategia;
 
     public Vehiculo(String placa, String marca, String modelo, double km) {
         this.placa = placa;
         this.marca = marca;
         this.modelo = modelo;
         this.km = km;
-        this.estrategia = null;
     }
 
     public abstract double costoBaseDia();
 
-    // Implementación genérica de calcularPrecioAlquiler usando la estrategia
     @Override
     public double calcularPrecioAlquiler(int dias) {
-        if (dias <= 0) throw new IllegalArgumentException("Días debe ser mayor que 0.");
-        double seguro = 0;
+        if (dias <= 0) throw new IllegalArgumentException("Días inválidos");
+
+        double seguro = 0.0;
         if (this instanceof Asegurable) {
             seguro = ((Asegurable) this).calcularSeguro(dias);
         }
-        double costoBase = costoBaseDia();
+
         EstrategiaPrecio e = (estrategia == null) ? new PrecioEstandar() : estrategia;
-        return e.total(dias, costoBase, seguro);
+        return e.total(dias, costoBaseDia(), seguro);
     }
 
     public void setEstrategia(EstrategiaPrecio estrategia) {
@@ -39,19 +43,12 @@ public abstract class Vehiculo implements Rentable {
     }
 
     public void sumarKm(double km) {
-        if (km < 0) throw new IllegalArgumentException("No se permiten km negativos.");
+        if (km < 0) throw new IllegalArgumentException("No se permiten km negativos");
         this.km += km;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s] %s %s (Placa: %s) KM: %.1f",
-                this.getClass().getSimpleName(), marca, modelo, placa, km);
+        return placa + " - " + marca + " " + modelo + " (" + km + " km)";
     }
-
-    // getters básicos (si los quieres usar desde Main)
-    public String getPlaca() { return placa; }
-    public String getMarca() { return marca; }
-    public String getModelo() { return modelo; }
-    public double getKm() { return km; }
 }

@@ -1,19 +1,18 @@
 package com.example.vehiculo;
 
-public class CamionetaElectrica extends Camioneta implements Electrico {
-    private int bateria; // 0 - 100
+import com.example.interfaces.Electrico;
 
-    public CamionetaElectrica(String placa, String marca, String modelo, double km, double capacidadKg, int bateriaInicial) {
-        super(placa, marca, modelo, km, capacidadKg);
-        this.bateria = Math.max(0, Math.min(100, bateriaInicial));
+public class CamionetaElectrica extends Camioneta implements Electrico {
+    private int bateria; // %
+
+    public CamionetaElectrica(String placa, String marca, String modelo, double km, double capacidadCarga, int bateria) {
+        super(placa, marca, modelo, km, capacidadCarga);
+        this.bateria = bateria;
     }
 
     @Override
     public void recargar(int minutos) {
-        if (minutos <= 0) return;
-        int incremento = minutos / 2;
-        bateria = Math.min(100, bateria + incremento);
-        System.out.println("Recarga: +" + incremento + "% -> nivel " + bateria + "%");
+        bateria = Math.min(100, bateria + minutos / 3);
     }
 
     @Override
@@ -23,6 +22,6 @@ public class CamionetaElectrica extends Camioneta implements Electrico {
 
     @Override
     public String toString() {
-        return super.toString() + " [Eléctrica, bateria=" + bateria + "%]";
+        return super.toString() + " [Eléctrica " + bateria + "%]";
     }
 }

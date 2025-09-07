@@ -4,6 +4,6 @@ public interface Rentable {
     double calcularPrecioAlquiler(int dias);
 
     default String condiciones() {
-        return "Condiciones generales: identificación, depósito y devolución en buen estado.";
+        return "Política genérica de alquiler: días > 0, se requiere pago anticipado.";
     }
 }

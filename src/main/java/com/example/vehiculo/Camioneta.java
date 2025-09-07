@@ -1,16 +1,18 @@
 package com.example.vehiculo;
 
-public class Camioneta extends Vehiculo implements Asegurable {
-    private double capacidadKg;
+import com.example.interfaces.Asegurable;
 
-    public Camioneta(String placa, String marca, String modelo, double km, double capacidadKg) {
+public class Camioneta extends Vehiculo implements Asegurable {
+    private double capacidadCarga;
+
+    public Camioneta(String placa, String marca, String modelo, double km, double capacidadCarga) {
         super(placa, marca, modelo, km);
-        this.capacidadKg = capacidadKg;
+        this.capacidadCarga = capacidadCarga;
     }
 
     @Override
     public double costoBaseDia() {
-        return 70.0; // tarifa base para Camioneta
+        return 80.0;
     }
 
     @Override
@@ -20,10 +22,6 @@ public class Camioneta extends Vehiculo implements Asegurable {
 
     @Override
     public String toString() {
-        return super.toString() + String.format(" [Camioneta - cap: %.0f kg]", capacidadKg);
-    }
-
-    public double getCapacidadKg() {
-        return capacidadKg;
+        return super.toString() + " [Camioneta - carga: " + capacidadCarga + "kg]";
     }
 }

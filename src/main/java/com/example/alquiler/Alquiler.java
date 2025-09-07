@@ -1,5 +1,7 @@
 package com.example.alquiler;
 
+import com.example.vehiculo.Vehiculo;
+
 public class Alquiler {
     private Vehiculo vehiculo;
     private int dias;
